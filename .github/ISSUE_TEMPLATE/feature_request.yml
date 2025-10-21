@@ -1,0 +1,42 @@
+name: "Feature request"
+description: "Propose an enhancement or new capability"
+title: "[Feature] "
+labels: ["feature", "needs-triage"]
+assignees: []
+
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What’s broken, missing, or painful? Focus on user impact.
+    validations:
+      required: true
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Real-world use cases
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: ui-text
+    attributes:
+      label: Suggested UI text / settings
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "How we’ll know this is done."
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "Technitium 10.x, Debian 12 on Proxmox"
