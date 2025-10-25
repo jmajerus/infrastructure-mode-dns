@@ -1,5 +1,3 @@
-> Moved: This file has a new canonical location at `docs/proposals/feature-request.md`. Please update bookmarks.
-
 **Title:** Add “Delete-on-RELEASE vs Delete-on-EXPIRY” and an “Infrastructure” mode for DHCP reservations (Sticky DDNS)
 
 **Problem**

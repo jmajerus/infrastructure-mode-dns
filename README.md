@@ -11,13 +11,13 @@
 - **Usable UI**: give Reservations a top-level tab with search, filters, drawer edit, and bulk actions.
 
 ### Why This Matters
-Home/SMB services (Jellyfin, Dispatcharr, HomeAssistant, printers, cameras, tuners) assume names like `epg.localdomain` *always resolve*. Enterprise-leaning DDNS defaults that delete on *expiry* cause dangling CNAMEs and guide/API failures—even while devices are up.
+Home/SMB services (database, MQTT, IOT services, HomeAssistant, printers, cameras, tuners, etc.) assume names like `service_name.localdomain` *always resolve*. Enterprise-leaning DDNS defaults that delete on *expiry* cause dangling CNAMEs and guide/API failures—even while devices are up.
 
 ### What’s in this repo
-- **`docs/infra-ddns.md`** — the feature spec for DDNS behavior.
-- **`docs/reservations-ux.md`** — the UI/UX proposal for a standalone Reservations tab.
-- **`proposals/feature-request.md`** — a copy-paste vendor issue with acceptance criteria.
-- **Issue forms & PR template** — to collect future ideas consistently.
+- **Docs index:** see [`docs/README.md`](./docs/README.md) for a curated table of contents.
+- **Core specs:** [`docs/infra-ddns.md`](./docs/infra-ddns.md), [`docs/reservations-ux.md`](./docs/reservations-ux.md)
+- **Vendor-facing proposals:** [`docs/proposals/feature-request.md`](./docs/proposals/feature-request.md), plus technical and summary briefs in `docs/proposals/`
+- **Issue forms & PR template:** live in [`.github/`](./.github/) to collect future ideas consistently
 
 ### Status
 This is a living proposal. PRs welcome: concrete UI text, API sketches, test plans.

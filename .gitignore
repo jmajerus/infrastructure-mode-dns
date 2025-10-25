@@ -1,0 +1,24 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.idea/
+.history/
+.pytest_cache/
+
+# Node / Docs tooling (optional future)
+node_modules/
+.pnpm-store/
+dist/
+build/
+.cache/
+
+# Python (if any scripts added later)
+__pycache__/
+*.pyc
+
+# Env & logs
+.env
+.env.*
+*.log
