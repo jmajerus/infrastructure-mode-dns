@@ -1,10 +1,12 @@
 # DNS Infrastructure-Level Stability
 **Rethinking DNS/DHCP integration for resilience, intent awareness, and automation that serves reliability.**  
-_Originated from early observations of Technitium DNS Server behavior and validated by the October 2025 AWS DNS outage._
+**A unified, stability-first framework that makes DNS/DHCP automation respect administrator intent and preserve continuity by default.**  
+_Originated from early observations of Technitium DNS Server behavior and underscored by the October 2025 AWS DNS outage._
 
 > [!IMPORTANT]
-> Infrastructure Mode (proposed): A new, first-class, intention-aware DNS/DHCP operating posture. Not in current releases. It preserves admin-created/static records and fixed reservations by default, reconciles via grace windows, detects drift, surfaces provenance, and ships with stability-first defaults. This repo is the design and vendor brief to make it real.
-> Why this matters: DNS/DHCP integrity underpins mission- and safety-critical environments (from hospitals and emergency services to manufacturing). Defaults should bias toward stability over aggressive cleanup.
+> **Infrastructure Mode (proposed):** A new, first-class, intention-aware DNS/DHCP operating posture and conceptual framework.  
+> Not in current releases. It preserves admin-created/static records and fixed reservations by default, reconciles via grace windows, detects drift, surfaces provenance, and ships with stability-first defaults.  
+> **Why this matters:** DNS/DHCP integrity underpins mission- and safety-critical environments (from hospitals and emergency services to manufacturing). Defaults should bias toward stability over aggressive cleanup.
 
 ---
 
@@ -125,12 +127,6 @@ Even a small shift in mindset — one that elevates user experience and administ
 
 
 ---
+## Where to go next
 
-## Repository Structure
-
-```text
-/
-├── README.md                ← Core rationale and principles document (this file)
-├── INDEX.md                 ← Summary and links to repository files 
-	├── proposals/               ← Vendor-facing proposals and technical briefs
-	├── *.md                     ← Specs, UX notes, rubrics, companion docs (top-level)
+For an organized map of all major files, proposals, and references, see [INDEX.md](./INDEX.md).
