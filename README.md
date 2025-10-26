@@ -2,6 +2,10 @@
 **Rethinking DNS/DHCP integration for resilience, intent awareness, and automation that serves reliability.**  
 _Originated from early observations of Technitium DNS Server behavior and validated by the October 2025 AWS DNS outage._
 
+> [!IMPORTANT]
+> Infrastructure Mode (proposed): A new, first-class, intention-aware DNS/DHCP operating posture. Not in current releases. It preserves admin-created/static records and fixed reservations by default, reconciles via grace windows, detects drift, surfaces provenance, and ships with stability-first defaults. This repo is the design and vendor brief to make it real.
+> Why this matters: DNS/DHCP integrity underpins mission- and safety-critical environments (from hospitals and emergency services to manufacturing). Defaults should bias toward stability over aggressive cleanup.
+
 ---
 
 ## Introduction and Background
@@ -20,13 +24,24 @@ This coincidence transformed the idea from a local optimization into a broader d
 
 ## Executive Summary
 
-This proposal requests enhancements to Technitium DNS Server that move beyond simple automation toggles toward a smarter, intention-aware integration between DNS and DHCP. At present, automatic removal of A/AAAA records on lease expiry can prematurely delete valid infrastructure mappings — particularly in test or mixed environments where administrators shorten lease times or manually define host records. The October 2025 AWS DNS outage, caused by an automation fault that propagated invalid records and disrupted dependent services worldwide, underscores the need for more conservative, context-sensitive DNS handling. By introducing safeguards such as a “Do not delete on lease expiry” option, lease-grace reconciliation, and detection of manual intent, Technitium can evolve into a self-hardening, administrator-aligned system that prioritizes stability, transparency, and resilience over rigid timing rules.
+This proposal introduces Infrastructure Mode — a new, first-class operating posture for Technitium DNS/DHCP — that is not in current releases today. Infrastructure Mode treats administrator-created DNS records and fixed DHCP reservations as durable infrastructure by default, adds conservative reconciliation paths, and surfaces intent and provenance so automation can act safely.
+
+In contrast to today’s lease-led behavior, Infrastructure Mode:
+- preserves admin-created/static A/AAAA records and fixed DHCP reservations by default (no auto-delete on lease expiry);
+- reconciles via a policy-driven grace window instead of hard-deleting immediately;
+- promotes DNS-first awareness: when a static A/AAAA exists, DHCP is prompted/auto-aligned and drift is detected;
+- makes decisions visible (why a record is retained, when it will be cleaned, how it was created) with auditability;
+- ships with conservative, stability-first defaults (“safety rails”) vendors can tune.
+
+Availability: Infrastructure Mode is a proposed capability. Some behaviors can be approximated with existing per-record flags, but the unified, intention-aware mode described here is not yet fully available. This repository is the design and vendor brief to make it real.
 
 ---
 
-## Future Direction: Toward Intention-Aware, Self-Hardening DNS/DHCP Integration
+## Future Direction: Introducing Infrastructure Mode (Intention-Aware, Self-Hardening)
 
-While this proposal represents a meaningful conceptual refinement, its implementation is straightforward — a matter of a few additional conditions and default behaviors. It does not require rearchitecture so much as a clarification of intent: DNS and DHCP should naturally align with how administrators already expect them to behave. When a record is deliberately created or fixed, the system should infer persistence rather than require redundant configuration steps. In that sense, this “future direction” is a modest, practical improvement — a small change in code that brings the software’s behavior into closer harmony with real-world usage.
+Infrastructure Mode is a named, explicit operating posture — not just a collection of toggles — that clarifies how DNS and DHCP behave when human intent is evident. It can be implemented incrementally (several parts are small, localized changes), but the value comes from treating the behaviors as a coherent mode that administrators can opt into (and vendors can ship as the recommended default).
+
+The guiding principle is straightforward: when a record is deliberately created or a lease is made fixed, the system infers persistence and protects it without extra steps. This brings the software’s behavior into closer harmony with real-world usage, where infrastructure should not vanish due to transient lease churn.
 
 ### 1. Respect for Administrator Intent
 The system should distinguish between:
@@ -49,7 +64,7 @@ This approach strengthens infrastructure in two important ways:
 1. **Reduced cognitive friction:** one action (making the reservation fixed) communicates everything the system needs to infer user intent.  
 2. **Automatic alignment of DNS and DHCP semantics:** fixed DHCP entries and fixed DNS entries stay in sync by design, removing a common source of desynchronization and record loss.
 
-Over time, the “Do not delete on lease expiry” setting could remain as an override for specialized use cases, but the **default assumption** should be that fixed DHCP reservations imply fixed DNS records. That’s the natural, intention-aware path toward a truly resilient and administrator-friendly system.
+Over time, the “Do not delete on lease expiry” setting could remain as an override for specialized use cases, but the **default assumption** should be that fixed DHCP reservations imply fixed DNS records. In Infrastructure Mode, this is a default invariant; outside the mode, it can remain an opt‑in behavior. That’s the natural, intention-aware path toward a resilient and administrator-friendly system.
 
 ### 2. Conservative Retention as a Stability Feature
 Instead of aggressively deleting DNS data as soon as a lease expires, the system should bias toward continuity. When there is ambiguity (“Is this device truly gone, or was lease time just dialed down temporarily?”), the safer behavior is to retain name-to-address mappings.

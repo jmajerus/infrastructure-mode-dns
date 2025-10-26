@@ -43,6 +43,13 @@ Active Leases list (read-only):
 
 This eliminates conceptual conflation of dynamic clients with administrator-owned reservations, reduces operator error, and makes the infrastructure intent visible.
 
+## Recommended Defaults (vendor chooses final)
+
+- Dedicated Fixed Reservations tab enabled
+- Infrastructure preset: Sticky DNS, Pin Hostname, TTL=86400, Conflict Guard = ON
+- Auto‑promote to static on reservation save = ON (with opt‑out)
+- Delete‑on‑RELEASE = ON; Delete‑on‑EXPIRY = OFF; Grace window = ON (24–48h)
+
 ## Related
 
 - UX spec: `reservations-ux.md`

@@ -69,7 +69,7 @@ Acceptance examples:
 - Infra names never disappear solely due to EXPIRY
 - Dynamic hygiene preserved via RELEASE; admins can opt into EXPIRY cleanup with grace
 
-Source: [Infrastructure-Level DDNS Behavior](./infra-ddns.md), [Feature Request](./proposals/feature-request.md)
+Source: [Infrastructure-Level DDNS Behavior](./infra-ddns.md), [Infrastructure Reservations & Sticky DDNS](./proposals/feature-infrastructure-reservations-sticky-ddns.md)
 
 ### Bundle B â€” Infrastructure reservations (sticky + safe)
 - Reservation-level Infrastructure mode:
@@ -138,7 +138,8 @@ Start with Bundle A. It flips the dangerous default and adds a grace window; itâ
 - UX flows: [Reservations UX Proposal](./reservations-ux.md)
 - Strategy/principles: [Future Direction](./future-direction.md)
 - Vendor-facing write-ups:
-  - [Feature Request: Preserve DNS on Lease Expiry](./proposals/feature-request.md)
+  - [Feature Request: Preserve DNS on Lease Expiry](./proposals/feature-dns-retention-summary.md)
+  - [Feature Request: Infrastructure Reservations & Sticky DDNS](./proposals/feature-infrastructure-reservations-sticky-ddns.md)
   - [Technical Analysis: DHCP/DNS Ownership Conflict](./proposals/feature-dns-retention-technical.md)
   - [Summary: Delete-on-RELEASE vs Delete-on-EXPIRY + Infrastructure Mode](./proposals/feature-dns-retention-summary.md)
 

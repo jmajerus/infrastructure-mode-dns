@@ -35,6 +35,12 @@ Policy toggles (Global → DNS/DHCP integration):
 
 Bridging DNS‑first workflows reduces operator error, preserves intent, and prevents silent drift between name authority and address authority.
 
+## Recommended Defaults (vendor chooses final)
+
+- On static DNS for in‑scope IP: Prompt to create reservation (Auto‑create optional)
+- Drift detection: ON (Warn by default; Block optional)
+- Auto‑watch in‑scope static DNS without reservations: ON
+
 ## Related
 
 - Core behavior: `infra-ddns.md`

@@ -17,7 +17,7 @@ Home/SMB services (database, MQTT, IOT services, HomeAssistant, printers, camera
 - **Overview:** see [`proposals-overview.md`](./proposals-overview.md) for a one‑page summary and bundles.
 - **Core specs:** [`infra-ddns.md`](./infra-ddns.md), [`reservations-ux.md`](./reservations-ux.md)
 - **Strategy & companion:** [`future-direction.md`](./future-direction.md), [`human-assisted-consistency.md`](./human-assisted-consistency.md)
-- **Vendor-facing proposals:** [`proposals/feature-request.md`](./proposals/feature-request.md), plus technical and summary briefs in `proposals/`
+- **Vendor-facing proposals:** [`proposals/feature-infrastructure-reservations-sticky-ddns.md`](./proposals/feature-infrastructure-reservations-sticky-ddns.md), plus technical and summary briefs in `proposals/`
 - **Issue forms & PR template:** live in [`.github/`](./.github/) to collect future ideas consistently
 
 #### Where things live
