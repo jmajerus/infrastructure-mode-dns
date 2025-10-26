@@ -6,6 +6,8 @@ This proposal requests enhancements to Technitium DNS Server that move beyond si
 
 # Future Direction: Toward Intention-Aware, Self-Hardening DNS/DHCP Integration
 
+> See also: [Proposals Overview and Implementation Options](./proposals-overview.md) for concrete bundles that can ship incrementally or together.
+
 The immediate request (e.g. preventing automatic removal of A/AAAA records on lease expiry) should be understood as the first step in a broader evolution. The long-term goal is to make Technitium’s DNS/DHCP integration smarter, safer, and more aligned with actual administrator intent — not just raw lease timing.
 
 ## 1. Respect for Administrator Intent

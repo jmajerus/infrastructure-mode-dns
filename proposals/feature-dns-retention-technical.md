@@ -1,69 +1,56 @@
-> Moved: This file has a new canonical location at `docs/proposals/feature-dns-retention-technical.md`. Please update bookmarks.
-
 # Technical Analysis: DHCP/DNS Record Ownership Conflict in Technitium
 
 ## Overview
 
-Technitium DNS Server’s *Enable DNS Update* option under DHCP scopes is designed to automate DNS record management—creating A/AAAA and PTR records when leases are granted, and deleting them upon lease expiry. However, this coupling of creation and deletion has an unintended side effect: it overrides administrator-created DNS records and removes them even when they correspond to reserved or semi-static hosts.
+With DHCP “Enable DNS Update,” Technitium creates A/AAAA and PTR on lease grant and deletes them on lease expiry. This tight coupling unintentionally removes admin-created or reservation-intended A/AAAA records during brief lapses or identifier changes, causing avoidable outages.
 
-## Root Cause
+## Root cause
 
-The behavior results from Technitium’s current **record ownership model**:
+1. DHCP treats itself as authoritative for records in-scope when DNS update is enabled.
+2. Lease-centric cleanup deletes A/AAAA on expiry, including for reservations.
+3. No distinction between admin-created vs DHCP-created records during cleanup.
 
-1. **DHCP as Authoritative Owner:** When *Enable DNS Update* is active, DHCP assumes it is the source of truth for all DNS entries within its managed address range.
-2. **Lease-Centric Cleanup:** When a lease expires (even for a reservation), the DHCP cleanup process deletes DNS records matching that IP.
-3. **No Manual Override:** The cleanup logic does not differentiate between records created manually and those created by the DHCP service.
+### Example
 
-### Example Scenario
+- Admin creates `my-server.lan -> 192.168.1.50`.
+- Reservation exists for 192.168.1.50 (MAC X).
+- Host goes offline past lease; cleanup deletes A/AAAA despite admin intent.
 
-* Administrator creates a manual DNS record: `my-server.lan -> 192.168.1.50`.
-* A DHCP reservation is added for the same IP and MAC address.
-* The device goes offline beyond its lease time.
-* The DHCP cleanup process removes the record on expiry, regardless of its manual creation.
+## Client identifier drift
 
-This occurs even though the administrator intended for the DNS record to persist.
+Rebuilt VMs/LXCs often change Client ID (DUID). The old lease expires and triggers deletion while a new lease for the same reservation is already active, flapping DNS.
 
-## Client Identifier Drift
+## Workaround today (not ideal)
 
-Modern operating systems, VMs, and container environments often generate a **Client Identifier (DUID)** distinct from the MAC address. When a VM or container is rebuilt, its DUID changes. This leads to:
+Use static IPs outside the pool and manual DNS. This avoids DHCP ownership but loses the benefits of reservations and automation.
 
-1. The DHCP server issuing a new lease (with a new Client ID) for the same reserved IP.
-2. The old lease—tied to the old Client ID—expiring.
-3. The cleanup process deleting DNS records associated with the expired lease, despite the new lease being active for the same IP.
+## Proposed enhancement
 
-This creates a frustrating cycle where DNS entries for otherwise stable devices continually vanish.
+- Per-scope checkbox: “Do not delete DNS A/AAAA on lease expiry”
+- Default posture: Delete-on-RELEASE = enabled; Delete-on-EXPIRY = disabled
+- PTR cleanup governed separately
 
-## Workaround (Inelegant)
+## Expected behavior
 
-Administrators must currently assign **true static IPs outside the DHCP pool** and manually create DNS entries. This removes the DHCP server’s ownership of that IP, preventing deletion. However, it negates the convenience and control offered by DHCP reservations and complicates automated provisioning.
+- Skip A/AAAA deletion during lease-expiry cleanup when the flag is set
+- Keep creating/updating records as today
+- PTR logic controlled by its own toggle
 
-## Proposed Enhancement
+## Optional safeguards
 
-Introduce a DHCP-scope option:
+- Don’t delete records whose creation predates DHCP association
+- Maintain origin tags: manual vs DHCP-created vs from-reservation
+- Per-scope setting for fine-grained control
 
-> **☑ Do not delete DNS A/AAAA records on lease expiry**
+## Implementation sketch
 
-### Expected Behavior
-
-* DNS records created or managed by DHCP remain after lease expiry unless explicitly deleted by the administrator.
-* PTR record cleanup could remain under a separate optional flag.
-* Logic in the lease-cleanup routine would skip A/AAAA deletions when this flag is set.
-
-### Optional Safeguards
-
-* Skip deletion of any record whose creation timestamp predates its DHCP association.
-* Maintain a distinct metadata tag in DNS entries denoting origin (manual vs. DHCP-created).
-* Apply the setting per scope for fine-grained control.
-
-## Implementation Notes
-
-The relevant logic resides in Technitium’s lease expiry handler (possibly within the *LeaseExpiryTask* or equivalent cleanup thread). Modification would involve adding a conditional check for this new flag before performing DNS deletion operations.
+Add a conditional check in the lease-expiry handler (cleanup task) to bypass A/AAAA deletion when the scope’s retain-on-expiry flag is true. Persist origin metadata in DNS records to enable provenance-aware behavior.
 
 ## Impact
 
-This small change yields outsized reliability improvements in hybrid environments where both dynamic and static infrastructure coexist. It enhances user trust and prevents unnecessary manual repair of DNS zones.
+Significant stability improvements for mixed environments (reservations + dynamic clients) with minimal code surface and clear operator expectations.
 
-## Sources and Acknowledgements
+## Related
 
-* **Google Gemini Pro (October 2025):** Provided detailed behavioral analysis of the DHCP/DNS record-ownership conflict.
-* **OpenAI ChatGPT (GPT-5, October 2025):** Structured and expanded the analysis to form this technical implementation proposal.
+- Summary request: [Preserve DNS on Lease Expiry](./feature-dns-retention-summary.md)
+- Overview and bundles: [Proposals Overview](../proposals-overview.md)

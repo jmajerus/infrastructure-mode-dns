@@ -2,8 +2,8 @@
 Briefly describe what this PR changes and why.
 
 ## Details
-- [ ] Updates docs/infra-ddns.md
-- [ ] Updates docs/reservations-ux.md
+- [ ] Updates infra-ddns.md
+- [ ] Updates reservations-ux.md
 - [ ] Adjusts issue templates
 
 ## Testing
